@@ -4,9 +4,9 @@ import requests
 import csv
 import time
 import random
+import xlsxwriter
 
-category_set = set()				#set for storage of categories
-
+category_dict = {}				#set for storage of categories
 # credits for user agent rotation method to https://www.scrapehero.com/how-to-fake-and-rotate-user-agents-using-python-3/
 user_agent_list = [
    #Chrome
@@ -35,7 +35,7 @@ user_agent_list = [
     'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
     'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)'
 ]
-
+workbook = xlsxwriter.Workbook('Category_info.xlsx')
 for i in range(1,11):
 	
 	time.sleep(10)											#add delay to request
@@ -49,11 +49,16 @@ for i in range(1,11):
 	soup = BeautifulSoup(page.content,'lxml')			#parsing the html doc
 
 	category = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div > h4')	#structure of the website determined the tags to be used
+	category_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div > h4 > a[href]')	#structure of the website determined the tags to be used
 
-	for cat in category: 
-		category_set.add(cat.text)					#add the category detected to set data structure to get unique categories
+	for (cat,url) in zip(category,category_url): 
+		category_dict[cat.text]="https://mvnrepository.com/"+url['href']					#add the category detected to set data structure to get unique categories
 
-with open("category.csv","w",newline="") as file:
-	writer = csv.writer(file)
-	for cat in category_set:
-		writer.writerow([cat])					#storing category info in a csv file
+worksheet1 = workbook.add_worksheet() 
+row = 0
+col = 0
+for k,v in category_dict.items():
+	worksheet1.write(row,col,k)
+	worksheet1.write(row,col+1,v)
+	row += 1
+workbook.close()					#storing category info with urls in a xlsx file
