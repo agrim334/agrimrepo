@@ -6,8 +6,8 @@ import random
 import openpyxl
 import xlsxwriter
 
-category_dict = {}                #set for storage of categories
 workbook = openpyxl.load_workbook("Category_info.xlsx") 
+
 # credits for user agent rotation method to https://www.scrapehero.com/how-to-fake-and-rotate-user-agents-using-python-3/
 user_agent_list = [
    #Chrome
@@ -37,19 +37,15 @@ user_agent_list = [
     'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)'
 ]
 sheet_obj = workbook.active 
-
-workbook2 = xlsxwriter.Workbook("Meta_datainfo.xlsx")
-sheet2 = workbook2.add_worksheet()
-row=0
-col=0
     
-for j in range(1,2):
+for j in range(1,151):
     URL = sheet_obj.cell(row = j, column = 2) 
     for i in range(1,11):    
         time.sleep(4)                                          #add delay to request
-        
+        url = URL.value + '?p='
+        url = url + str(i)
         user_agent = random.choice(user_agent_list)
-        page = requests.get(URL.value,headers = {'User-Agent': user_agent})
+        page = requests.get(url,headers = {'User-Agent': user_agent})
         
         soup = BeautifulSoup(page.content,'lxml')           #parsing the html doc
         lib_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div[class = "im"] > a[href ^= "/artifact/"]')  #structure of the website determined the tags to be used
@@ -60,14 +56,10 @@ for j in range(1,2):
             time.sleep(3)                                          #add delay to request
             newpage = requests.get(new_url,headers = {'User-Agent': user_agent})
             newsoup = BeautifulSoup(newpage.content,'lxml')
-            metainfo_heading = newsoup.select('body > div[id = "page"] > div[id = "maincontent"] > table[class = "grid"] > tr > th')  #structure of the website determined the tags to be used
+            lib_name = newsoup.select('body > div[id = "page"] > div[id = "maincontent"] > div[class = "im"] > div[class = "im-header"] > h2[class = "im-title"] > a[href]')
             metainfo_value = newsoup.select('body > div[id = "page"] > div[id = "maincontent"] > table[class = "grid"] > tr > td')  #structure of the website determined the tags to be used
-            
-            for (head,val) in zip(metainfo_heading,metainfo_value):
-                sheet2.write(row,col,head.text)
-                sheet2.write(row,col+1,val.text)
-                row += 1 
-                
-            
+
+            for val in metainfo_value:
+                print(val.text)
+
 workbook.close()
-workbook2.close()
