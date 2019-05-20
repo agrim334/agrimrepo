@@ -4,6 +4,7 @@ import requests
 import time
 import random
 import openpyxl
+import wget
 
 workbook = openpyxl.load_workbook("Category_info.xlsx") 
 
@@ -47,7 +48,6 @@ for j in range(1,151):
         page = requests.get(url,headers = {'User-Agent': user_agent})
         
         soup = BeautifulSoup(page.content,'lxml')           #parsing the html doc
-        path = 'body > div[id = "page"] > div[id = "maincontent"] > div > div[id = "snippets"] > div[class = "tab_container"] > div[class = "tab_content active"] > div[class = "gridcontainer"] > table[class = "grid versions"] > tr > td > a[href]'
         lib_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div[class = "im"] > a[href ^= "/artifact/"]')  #structure of the website determined the tags to be used
         
         for temp in lib_url:
@@ -66,6 +66,14 @@ for j in range(1,151):
             newpage2 = requests.get(page_url,headers = {'User-Agent': user_agent})
             newsoup2 = BeautifulSoup(newpage2.content,'lxml')
 
-            downlist = newsoup2.select('table[class = "grid"] > tbody > tr > td > a[href ^= "http://central.maven.org"]')
-            print(downlist)
+            downlist = newsoup2.select('table[class = "grid"] a[href ^= "http://central.maven.org/maven2/"]')
+            
+            for temp in downlist:
+                if temp.text == "View All":
+                    newpage3 = requests.get(temp['href'],headers = {'User-Agent': user_agent})
+                    newsoup3 = BeautifulSoup(newpage3.content,'lxml')
+                    finalurl = newsoup3.select('body a[href $= ".jar"]')
+                    for down in finalurl:
+                        getit = temp['href']+'/'+down['href']
+                        file = wget.download(getit)
 workbook.close()
