@@ -6,3 +6,6 @@ JAR Code analysis with the help of Machine Learning
 - As of now category data can be fetched via Get_Category.py and stored in an excel file
 - Meta_data.py can display meta data (category,tags,usage etc) for a library
 - Download_Jar.py fetches the download url for each file (though accessing it has to be resolved. Downloading jar file to be implemented.) 
+
+20-05-2019
+- Download_Jar.py now downloads the jar files from the repository (md5 sha2 and pom file excluded).
