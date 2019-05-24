@@ -12,3 +12,6 @@ JAR Code analysis with the help of Machine Learning
 
 21-05-2019
 - Files are downloaded into seperate directories (for classifiying into different categories).
+
+24-05-2019
+- Extract_Class_Info.py added which is able to extract qualified class names. Further decompiled info extraction will be added
