@@ -15,3 +15,6 @@ JAR Code analysis with the help of Machine Learning
 
 24-05-2019
 - Extract_Class_Info.py added which is able to extract qualified class names. Further decompiled info extraction will be added
+
+28-05-2019
+- Extract_Class_Info.py now gives class names alongwith decompiled class code and class file structure. To use it first uncomment makedirs and first subprocess command (to create and unzip jars to appropriate folders). Then run the program to obtain the information. The information can optionally be stored in a file (using >> filename.ext if on command line). Appropriate renaming of main directory should be done.
