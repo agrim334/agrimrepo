@@ -18,3 +18,6 @@ JAR Code analysis with the help of Machine Learning
 
 28-05-2019
 - Extract_Class_Info.py now gives class names alongwith decompiled class code and class file structure. To use it first uncomment makedirs and first subprocess command (to create and unzip jars to appropriate folders). Then run the program to obtain the information. The information can optionally be stored in a file (using >> filename.ext if on command line). Appropriate renaming of main directory should be done.
+
+03-06-2019
+- Output from Extract_Class_Info.py refined to give JVM instructions , line tables and Class names(alongwith methods) only. Command line arguments are to be used to specify storage file(txt,csv as of now) and flag to remove comments from produced code(stored in seperate file)
