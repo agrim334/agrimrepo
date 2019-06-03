@@ -21,3 +21,4 @@ JAR Code analysis with the help of Machine Learning
 
 03-06-2019
 - Output from Extract_Class_Info.py refined to give JVM instructions , line tables and Class names(alongwith methods) only. Command line arguments are to be used to specify storage file(txt,csv as of now) and flag to remove comments from produced code(stored in seperate file)
+- Get_Category.py now stores fetched category info in a tuple ( name, library count, url to category).
