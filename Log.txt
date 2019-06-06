@@ -27,3 +27,7 @@ JAR Code analysis with the help of Machine Learning
 - Meta data.py now retrieves meta data regarding each library of each category and stores them in an xlsx format file. This program requires data fetched using Get_Category.py 
 - Need to deal with varying number of pages in each category.(Until now 10 pages assumed per category)
 - Seperation of tags and licenses via delimiters to be added
+
+06-06-2019
+- Meta_data.py updated to handle cases where usage of library was not given. Also comments have been redone to give better explanation of the code
+- Separation of tag data still remains to be handled.
