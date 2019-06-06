@@ -39,48 +39,48 @@ user_agent_list = [
 sheet_obj = workbook.active 
 	
 for j in range(1,151):
-	URL = sheet_obj.cell(row = j, column = 3)
+	URL = sheet_obj.cell(row = j, column = 3)		#selecting category from Category_Info.xlsx
 	cat_name = sheet_obj.cell(row = j,column = 1) 
 	for i in range(1,11):    
 		time.sleep(2)                                          #add delay to request
 		url = URL.value + '?p='
-		url = url + str(i)
+		url = url + str(i)										#Url obtained for going to ith page in the category
 		user_agent = random.choice(user_agent_list)
 		page = requests.get(url,headers = {'User-Agent': user_agent})
 		
 		soup = BeautifulSoup(page.content,'lxml')           #parsing the html doc
-		lib_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div[class = "im"] > a[href ^= "/artifact/"]')  #structure of the website determined the tags to be used
+		lib_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div[class = "im"] > a[href ^= "/artifact/"]') #gets the set of urls for each library on the ith page of the jth category
 		for temp in lib_url:
-			new_url = "https://mvnrepository.com/"+temp['href']
+			new_url = "https://mvnrepository.com/"+temp['href']				#url of a library (say X) in the url set
 			user_agent = random.choice(user_agent_list)
-			time.sleep(2)                                          #add delay to request
+			time.sleep(2)                                          
 			newpage = requests.get(new_url,headers = {'User-Agent': user_agent})
 			newsoup = BeautifulSoup(newpage.content,'lxml')
 			
-			down_url = newsoup.select_one('table[class = "grid versions"] > tbody > tr > td > a[href]')
+			down_url = newsoup.select_one('table[class = "grid versions"] > tbody > tr > td > a[href]')	# url of the latest version of the jar library
 			
-			page_url = new_url+'/'+down_url.text
-			lib_name = newsoup.select_one('h2[class="im-title"] > a[href]')
+			page_url = new_url+'/'+down_url.text		#url of the page from where download will be triggered
+			lib_name = newsoup.select_one('h2[class="im-title"] > a[href]')		#name of the library being downloaded
 			
 			user_agent = random.choice(user_agent_list)
-			time.sleep(2)                                          #add delay to request
+			time.sleep(2)                                          
 			newpage2 = requests.get(page_url,headers = {'User-Agent': user_agent})
-			newsoup2 = BeautifulSoup(newpage2.content,'lxml')
+			newsoup2 = BeautifulSoup(newpage2.content,'lxml')		
 			
-			downlist = newsoup2.select('table[class = "grid"] a[href ^= "http://central.maven.org/maven2/"]')
+			downlist = newsoup2.select('table[class = "grid"] a[href ^= "http://central.maven.org/maven2/"]')	#the page of the website features a view all button which is the true url containing list of files for download
 			for temp in downlist:
 				if temp.text == "View All":
 					newpage3 = requests.get(temp['href'],headers = {'User-Agent': user_agent})
 					newsoup3 = BeautifulSoup(newpage3.content,'lxml')
-					finalurl = newsoup3.select('body a[href $= ".jar"]')
-					path = "lib/"+cat_name.value+"/"+lib_name.text
+					finalurl = newsoup3.select('body a[href $= ".jar"]')			#obtaining the actual url for downloading the jar file
+					path = "lib/"+cat_name.value+"/"+lib_name.text					#path for storing downloaded file
 					
 					try:
 						os.makedirs(path)
 						for down in finalurl:
-							getit = temp['href']+'/'+down['href']
+							getit = temp['href']+'/'+down['href']			#downloading the file
 							file = wget.download(getit,path)
 					except:
-						print("file already downloaded for: "+lib_name.text)
+						print("file already downloaded for: "+lib_name.text)	#if already downloaded then this message is displayed
 						pass
 workbook.close()

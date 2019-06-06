@@ -52,7 +52,7 @@ for i in range(1,16):
 	category_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div > h4 > a[href]')	#structure of the website determined the tags to be used
 
 	for (cat,url) in zip(category,category_url): 
-		category_dict[cat.text]="https://mvnrepository.com/"+url['href']					#add the category detected to set data structure to get unique categories
+		category_dict[cat.text]="https://mvnrepository.com/"+url['href']					#add the category detected to dictionary data structure to get unique categories
 
 worksheet1 = workbook.add_worksheet() 
 row = 0

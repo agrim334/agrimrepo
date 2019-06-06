@@ -4,7 +4,6 @@ import requests
 import time
 import random
 import openpyxl
-#import xlsxwriter
 
 workbook = openpyxl.load_workbook("Category_info.xlsx") 
 wb2 = openpyxl.Workbook()
@@ -38,8 +37,6 @@ user_agent_list = [
 ]
 sheet_obj = workbook.active 
 sheet_obj2 = wb2.active
-#workbook2 = xlsxwriter.Workbook('Meta_data.xlsx')
-#worksheet1 = workbook2.add_worksheet()
 row = 1
 
 for j in range(1,151):
@@ -52,41 +49,59 @@ for j in range(1,151):
 		page = requests.get(url,headers = {'User-Agent': user_agent})
 		
 		soup = BeautifulSoup(page.content,'lxml')           #parsing the html doc
-		lib_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div[class = "im"] > a[href ^= "/artifact/"]')  #structure of the website determined the tags to be used
+		lib_url = soup.select('body div[id = "page"] > div[id = "maincontent"] > div[class = "im"] > a[href ^= "/artifact/"]')  #structure of the website determined the tags to be used
 		
 		for temp in lib_url:
 			new_url = "https://mvnrepository.com/"+temp['href']
 			user_agent = random.choice(user_agent_list)
-			time.sleep(2)                                          #add delay to request
+			time.sleep(2)
 			newpage = requests.get(new_url,headers = {'User-Agent': user_agent})
 			newsoup = BeautifulSoup(newpage.content,'lxml')
-			lib_name = newsoup.select('body > div[id = "page"] > div[id = "maincontent"] > div[class = "im"] > div[class = "im-header"] > h2[class = "im-title"] > a[href]')
-			metainfo_value = newsoup.select('body > div[id = "page"] > div[id = "maincontent"] > table[class = "grid"] > tr > td')  #structure of the website determined the tags to be used
-			n=0
+			lib_name = newsoup.select('body div[id = "page"] > div[id = "maincontent"] div[class = "im"] > div[class = "im-header"] > h2[class = "im-title"] > a[href]') #library name stored 
+			metainfo_value = newsoup.select('body div[id = "page"] div[id = "maincontent"] > table[class = "grid"] > tr > td')  #this item stores meta data values
+			
+			items = 1
 			col = 2
-			for val in metainfo_value:
-				cell = sheet_obj2.cell(row=row,column=col)
-				if col == 4:
-					temp = val.text
-					cell.value = temp
-				elif col == 5:
-					try:
-						numval = val.text.split()[:-1]
-						numval = int(numval[0].replace(',',''))
-						cell.value = numval
-					except:
-						cell.value = ''
-				else:
-					cell.value = val.text
-				col = col + 1
-				print(cell.value)
-				print(col)
-				wb2.save("Meta_data.xlsx")
-				if col == 6:
-					cell = sheet_obj2.cell(row=row,column=1)
-					cell.value = lib_name[n].text
-					n = n + 1
-					col = 2
-					row = row + 1
+			col2 = 2 
+			
+			cell = sheet_obj2.cell(row=row,column=1)
+			cell.value = lib_name[0].text			#storing name of library in xlsx
+			print(cell.value)
+			
+			for valcount in metainfo_value:			#getting count of available meta data fields
+				items = items + 1
+
+			if items == 4:							#for some libraries usage field is not available hence substituting 0 for usage in such cases
+				for val in metainfo_value:
+					cell = sheet_obj2.cell(row=row,column=col2)
+					cell.value = val.text			#structure of html table is slightly different hence the if else conditions to handle the capture of data
+					col2 = col2 + 1
+					print(cell.value)
+					wb2.save("Meta_data.xlsx")					
+
+				cell = sheet_obj2.cell(row=row,column=5)
+				cell.value = 0
+				row = row + 1
+
+			elif items == 5:							#usage of library is given for this case
+
+				for val in metainfo_value:
+					cell = sheet_obj2.cell(row=row,column=col)
+					if col == 5:
+						try:
+							numval = val.text.split()[:-1]
+							numval = int(numval[0].replace(',',''))			#converting usage into integer value 
+							cell.value = numval
+						except:
+							cell.value = 0
+					else:
+						cell.value = val.text								#for normal text data
+					col = col + 1
+					print(cell.value)
+					wb2.save("Meta_data.xlsx")					
+					if col == 6:
+						col = 2
+						row = row + 1
+
 wb2.close()
 workbook.close()
