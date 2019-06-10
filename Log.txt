@@ -31,3 +31,6 @@ JAR Code analysis with the help of Machine Learning
 06-06-2019
 - Meta_data.py updated to handle cases where usage of library was not given. Also comments have been redone to give better explanation of the code
 - Separation of tag data still remains to be handled.
+
+10-06-2019
+- Extract_Class_Info.py outputs javap decompiled code to separate txt files.
