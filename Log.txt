@@ -34,3 +34,6 @@ JAR Code analysis with the help of Machine Learning
 
 10-06-2019
 - Extract_Class_Info.py outputs javap decompiled code to separate txt files.
+
+2-07-2019
+- analyze.py takes the extracted class file and applies doc2vec on it. As of now need to deal with passing data to build_vocab method and deal with memory error
