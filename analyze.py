@@ -44,8 +44,9 @@ train_data = []
 
 for i in range(0,150):
 	cat_tags[cat_df.at[i,'Category']] = i 
+use_old = sys.argv[1]
 
-if use_old:
+if use_old != 0:
 	model = Doc2Vec.load("d2v.model")
 else:
 	for row in range(0,80):
@@ -82,4 +83,4 @@ else:
 		model.min_alpha = model.alpha
 
 	model.save("d2v.model")
-	print("Model Saved")'''
+	print("Model Saved")
