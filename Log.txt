@@ -39,4 +39,4 @@ JAR Code analysis with the help of Machine Learning
 - analyze.py takes the extracted class file and applies doc2vec on it. As of now need to deal with passing data to build_vocab method and deal with memory error
 
 5-07-2019
-- Model (containing vector for the bytecode file) can be obtained using analyze.py .Prediction making to be implemented (Alter paths to suitable locations on your machine to run the program. Meta_data info category_info are required)
+- Model (containing vector for the bytecode file) can be obtained using analyze.py.Supply command line arg to train a new model or use old one. Prediction making to be implemented (Alter paths to suitable locations on your machine to run the program. Meta_data info category_info are required)
