@@ -40,3 +40,6 @@ JAR Code analysis with the help of Machine Learning
 
 5-07-2019
 - Model (containing vector for the bytecode file) can be obtained using analyze.py.Supply command line arg to train a new model or use old one. Prediction making to be implemented (Alter paths to suitable locations on your machine to run the program. Meta_data info category_info are required)
+
+10-07-2019
+- Prediction of document tag achieved. Need to tune parameters and tags to improve accuracy ( doc2vec model tags may be problematic as prediction results for training set are low(56%))
