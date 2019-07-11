@@ -43,3 +43,6 @@ JAR Code analysis with the help of Machine Learning
 
 10-07-2019
 - Prediction of document tag achieved. Need to tune parameters and tags to improve accuracy ( doc2vec model tags may be problematic as prediction results for training set are low(56%))
+
+11-07-2019
+-earlier program was unable to overfit even the training set(meaning features not learnt). data formating was the culprit. updated training data format to enable prediciton. Test data format to be adapted for prediction
