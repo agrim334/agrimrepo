@@ -4,10 +4,11 @@ import requests
 import csv
 import time
 import random
-import xlsxwriter
+import xlsxwriter	#can replace this with openpyxl
 
 category_dict = {}				#set for storage of categories
-# credits for user agent rotation method to https://www.scrapehero.com/how-to-fake-and-rotate-user-agents-using-python-3/
+
+# credit for user agent rotation method to https://www.scrapehero.com/how-to-fake-and-rotate-user-agents-using-python-3/
 user_agent_list = [
    #Chrome
 	'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
@@ -35,8 +36,8 @@ user_agent_list = [
 	'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
 	'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)'
 ]
-workbook = xlsxwriter.Workbook('Category_info.xlsx')
-for i in range(1,16):
+
+for i in range(1,16):								#the website had 15 pages for total categories. may need to update this to handle changes in website
 	
 	time.sleep(2)											#add delay to request
 
@@ -47,23 +48,29 @@ for i in range(1,16):
 	page = requests.get(URL,headers = {'User-Agent': user_agent})
 
 	soup = BeautifulSoup(page.content,'lxml')			#parsing the html doc
+														#structure of the website determined the tags to be used
 
-	category = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div > h4')	#structure of the website determined the tags to be used
-	category_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div > h4 > a[href]')	#structure of the website determined the tags to be used
+	category = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div > h4')		#this obtains the category name alongwith library count in form of a list
+
+	category_url = soup.select('body > div[id = "page"] > div[id = "maincontent"] > div > h4 > a[href]')	#this obtains the url for main page of each category in form of a list
 
 	for (cat,url) in zip(category,category_url): 
-		category_dict[cat.text]="https://mvnrepository.com/"+url['href']					#add the category detected to dictionary data structure to get unique categories
+		category_dict[cat.text]="https://mvnrepository.com/"+url['href']			#cat.text contains category+library count string which is the key and value is the url for it
 
+workbook = xlsxwriter.Workbook('Path to xlsx file')		#create new workbook
 worksheet1 = workbook.add_worksheet() 
 row = 0
 col = 0
-for k,v in category_dict.items():
-	val = k.split()[-1]
-	val = int(val[1:-1])
+
+for k,v in category_dict.items():		#obtaining values from the category set
+	
+	val = k.split()[-1]						#splitting the category name and library count
+	val = int(val[1:-1])					#this gives the library count in integer form 
 	cat = ', '.join(k.split()[:-1])
-	cat = cat.replace(",","")
+	cat = cat.replace(",","")				#category name cleaned up 
 	worksheet1.write(row,col,cat)
-	worksheet1.write(row,col+1,val)
+	worksheet1.write(row,col+1,val)			#writing category name, count and url to xlsx file
 	worksheet1.write(row,col+2,v)
 	row += 1
+
 workbook.close()					#storing category info with urls in a xlsx file
