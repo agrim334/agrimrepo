@@ -1,20 +1,20 @@
 # Install requirements
-sudo apt-get install -y build-essential \
-checkinstall \
-libreadline-gplv2-dev \
-libncursesw5-dev \
-libssl-dev \
-libsqlite3-dev \
-tk-dev \
-libgdbm-dev \
-libc6-dev \
-libbz2-dev \
-zlib1g-dev \
-openssl \
-libffi-dev \
-python3-dev \
-python3-setuptools \
-wget
+sudo apt-get install -y build-essential
+sudo apt-get install -y checkinstall
+sudo apt-get install -y libreadline-gplv2-dev
+sudo apt-get install -y libncursesw5-dev
+sudo apt-get install -y libssl-dev
+sudo apt-get install -y libsqlite3-dev
+sudo apt-get install -y tk-dev
+sudo apt-get install -y libgdbm-dev
+sudo apt-get install -y libc6-dev
+sudo apt-get install -y libbz2-dev
+sudo apt-get install -y zlib1g-dev
+sudo apt-get install -y openssl
+sudo apt-get install -y libffi-dev
+sudo apt-get install -y python3-dev
+sudo apt-get install -y python3-setuptools
+sudo apt-get install -y wget
 
 # Prepare to build
 mkdir /tmp/Python37
